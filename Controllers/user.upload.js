@@ -100,4 +100,26 @@ router.put('/projects/:id', async (req, res) => {
 });
 
 
+router.get('/projectnumbers', async (req, res) => {
+    try {
+        // Count all projects
+        const allProjects = await Image.countDocuments();
+
+        // Count projects by type
+        const oldProjects = await Image.countDocuments({ projectType: 'Old' });
+        const newProjects = await Image.countDocuments({ projectType: 'New' });
+
+        // Send counts as response
+        res.json({
+            allProjects,
+            oldProjects,
+            newProjects,
+        });
+    } catch (error) {
+        console.error('Error fetching project numbers:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
 module.exports = router;
