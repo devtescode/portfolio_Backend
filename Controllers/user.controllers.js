@@ -101,8 +101,30 @@ module.exports.contact = async (req, res) => {
         from: email,
         to: process.env.RECEIVER_MAIL, // Replace with your receiving email
         subject: 'New Contact Form Submission',
-        text: `You have a new contact form submission:\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`
+        html: `
+            <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                <h2 style="color: #2C3E50; text-align: center; margin-bottom: 20px;">New Contact Form Submission</h2>
+                <p style="color: #555; text-align: center;">You have received a new message from the contact form on your website.</p>
+                
+                <div style="margin-top: 20px; padding: 15px; border-top: 1px solid #ddd;">
+                    <h4 style="color: #2C3E50; margin-bottom: 10px;">Sender Details:</h4>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #2980B9;">${email}</a></p>
+                    <p><strong>Phone:</strong> ${phone}</p>
+                </div>
+    
+                <div style="margin-top: 20px; padding: 15px; border-top: 1px solid #ddd;">
+                    <h4 style="color: #2C3E50; margin-bottom: 10px;">Message:</h4>
+                    <p style="line-height: 1.6; color: #555;">${message}</p>
+                </div>
+    
+                <footer style="margin-top: 20px; padding: 10px; text-align: center; border-top: 1px solid #ddd; font-size: 12px; color: #999;">
+                    <p>Thank you for using our service!</p>
+                </footer>
+            </div>
+        `
     };
+    
 
     try {
         // Send the email
