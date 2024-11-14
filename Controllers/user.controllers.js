@@ -99,7 +99,7 @@ module.exports.contact = async (req, res) => {
     const { name, email, phone, message } = req.body;
     const mailOptions = {
         from: email,
-        to: process.env.RECEIVER_MAIL, // Replace with your receiving email
+        to: process.env.RECEIVER_MAIL,
         subject: 'New Contact Form Submission',
         html: `
             <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
