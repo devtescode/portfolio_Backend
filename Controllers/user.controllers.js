@@ -97,6 +97,8 @@ module.exports.check = async (req, res) => {
 
 module.exports.contact = async (req, res) => {
     const { name, email, phone, message } = req.body;
+    console.log(req.body);
+
     const mailOptions = {
         from: email,
         to: process.env.RECEIVER_MAIL,
@@ -104,7 +106,7 @@ module.exports.contact = async (req, res) => {
         html: `
             <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
                 <h2 style="color: #2C3E50; text-align: center; margin-bottom: 20px;">New Contact Form Submission</h2>
-                <p style="color: #555; text-align: center;">You have received a new message from the contact form on your website.</p>
+                <p style="color: #555; text-align: center;">You have received a new message from the contact form on your website portfolio.</p>
                 
                 <div style="margin-top: 20px; padding: 15px; border-top: 1px solid #ddd;">
                     <h4 style="color: #2C3E50; margin-bottom: 10px;">Sender Details:</h4>
@@ -124,14 +126,14 @@ module.exports.contact = async (req, res) => {
             </div>
         `
     };
-    
+
 
     try {
         // Send the email
         await transporter.sendMail(mailOptions);
         res.status(200).json({ message: 'Message sent successfully!' });
         console.log("Message sent successfully");
-        
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to send message' });
