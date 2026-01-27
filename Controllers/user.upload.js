@@ -23,13 +23,18 @@ router.post('/upload', upload.single('image'), async (req, res) => {
                     url: result.secure_url,
                     projectName: req.body.projectName,
                     deployLink: req.body.deployLink,
-                    projectType: req.body.projectType, // Save projectType
+                    projectcode: req.body.projectcode, // Save projectType
+                    description: req.body.description, // Save projectType
                 });
+                console.log(newImage, "uploaded success");
+                
 
                 await newImage.save();
                 res.status(200).json({ imageUrl: result.secure_url });
             }
         );
+
+        
 
         result.end(req.file.buffer);
     } catch (error) {

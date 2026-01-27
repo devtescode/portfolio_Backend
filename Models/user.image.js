@@ -4,7 +4,8 @@ const imageSchema = new mongoose.Schema({
     url: String,
     projectName: String,
     deployLink: String,
-    projectType: { type: String, enum: ['New', 'Old'], required: true },
+    projectcode: String,
+    description: String,
 });
 
 module.exports = mongoose.model('Image', imageSchema);
