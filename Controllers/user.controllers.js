@@ -41,7 +41,6 @@ module.exports.register = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Check if an admin already exists
         const existingAdmin = await Userschema.findOne({ role: 'admin' });
         if (existingAdmin) {
             return res.status(400).json({ message: 'Admin already registered' });
