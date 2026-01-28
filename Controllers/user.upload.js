@@ -69,7 +69,7 @@ router.get('/images', async (req, res) => {
 router.get('/projects', async (req, res) => {
     try {
         const projects = await Image.find();
-        res.json(projects); 
+        res.json(projects);
         console.log(projects);
 
     } catch (error) {
@@ -92,15 +92,28 @@ router.delete('/projects/:id', async (req, res) => {
 
 
 router.put('/projects/:id', async (req, res) => {
+    console.log(req.body);
+    
     try {
-        const { projectName, deployLink, projectType } = req.body;
-        const project = await Image.findByIdAndUpdate(req.params.id, { projectName, deployLink, projectType }, { new: true });
-        if (!project) {
-            return res.status(404).send('Project not found');
+        const updatedProject = await Image.findByIdAndUpdate(
+            req.params.id,
+            {
+                projectName: req.body.projectName,
+                description: req.body.description,
+                url: req.body.url,
+                deployLink: req.body.deployLink,
+                projectcode: req.body.projectcode,
+            },
+            { new: true }
+        );
+
+        if (!updatedProject) {
+            return res.status(404).json({ message: 'Project not found' });
         }
-        res.json(project);
+
+        res.json(updatedProject);
     } catch (error) {
-        res.status(500).send('Server error');
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
