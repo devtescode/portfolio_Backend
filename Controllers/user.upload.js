@@ -27,14 +27,14 @@ router.post('/upload', upload.single('image'), async (req, res) => {
                     description: req.body.description, // Save projectType
                 });
                 console.log(newImage, "uploaded success");
-                
+
 
                 await newImage.save();
                 res.status(200).json({ imageUrl: result.secure_url });
             }
         );
 
-        
+
 
         result.end(req.file.buffer);
     } catch (error) {
