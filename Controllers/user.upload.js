@@ -44,6 +44,46 @@ router.post('/upload', upload.single('image'), async (req, res) => {
 });
 
 
+router.put('/uploadimage/:id', upload.single('image'), async (req, res) => {
+  try {
+    const projectId = req.params.id;
+
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const streamUpload = (fileBuffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: 'image' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(fileBuffer);
+      });
+    };
+
+    const result = await streamUpload(req.file.buffer);
+
+    // Update project in DB
+    const updatedProject = await Image.findByIdAndUpdate(
+      projectId,
+      { url: result.secure_url },
+      { new: true }
+    );
+
+    if (!updatedProject) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    res.status(200).json({ url: result.secure_url, project: updatedProject });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Image upload failed' });
+  }
+});
+
+
 router.get('/images', async (req, res) => {
     const { projectType } = req.query; // Get filter type from query
 
