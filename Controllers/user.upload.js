@@ -68,8 +68,8 @@ router.get('/images', async (req, res) => {
 
 router.get('/projects', async (req, res) => {
     try {
-        const projects = await Image.find(); // Assuming you have a MongoDB schema called Project
-        res.json(projects); // Send the list of projects back as JSON
+        const projects = await Image.find();
+        res.json(projects); 
         console.log(projects);
 
     } catch (error) {
