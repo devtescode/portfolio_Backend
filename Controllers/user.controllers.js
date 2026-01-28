@@ -95,7 +95,6 @@ module.exports.check = async (req, res) => {
 
 module.exports.contact = async (req, res) => {
     const { name, email, phone, message } = req.body;
-    console.log(req.body);
 
     const mailOptions = {
         from: email,
