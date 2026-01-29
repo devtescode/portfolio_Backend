@@ -16,16 +16,16 @@ const mongoose = require("mongoose")
 env.config()
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // MUST be false for 587
-  auth: {
-    user: process.env.RECEIVER_MAIL,
-    pass: process.env.APP_PASSWORD, // ✔ uppercase
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // MUST be false for 587
+    auth: {
+        user: process.env.RECEIVER_MAIL,
+        pass: process.env.APP_PASSWORD, // ✔ uppercase
+    },
+    tls: {
+        rejectUnauthorized: false,
+    },
 });
 
 // cloudinary.config({
@@ -103,7 +103,7 @@ module.exports.contact = async (req, res) => {
     console.log(req.body);
 
     console.log(process.env.App_Password);
-    
+
     const mailOptions = {
         from: email,
         to: process.env.RECEIVER_MAIL,
@@ -134,18 +134,18 @@ module.exports.contact = async (req, res) => {
 
 
     try {
-  await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
 
-  console.log("Message sent successfully");
-  res.status(200).json({ message: "Message sent successfully!" });
+        console.log("Message sent successfully");
+        res.status(200).json({ message: "Message sent successfully!" });
 
-} catch (error) {
-  console.error("Email send error:", error);
+    } catch (error) {
+        console.error("Email send error:", error);
 
-  res.status(500).json({
-    message: "Failed to send message",
-    error: error.message, // helpful during debugging
-  });
-}
+        res.status(500).json({
+            message: "Failed to send message",
+            error: error.message, // helpful during debugging
+        });
+    }
 
 }
