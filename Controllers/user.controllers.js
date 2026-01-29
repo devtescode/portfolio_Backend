@@ -16,11 +16,16 @@ const mongoose = require("mongoose")
 env.config()
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.RECEIVER_MAIL, // Replace with your email
-        pass: process.env.App_Password // Replace with your app password
-    }
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // MUST be false for 587
+  auth: {
+    user: process.env.RECEIVER_MAIL,
+    pass: process.env.APP_PASSWORD, // ✔ uppercase
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 // cloudinary.config({
