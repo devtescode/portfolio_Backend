@@ -78,11 +78,11 @@ module.exports.check = async (req, res) => {
 
 module.exports.contact = async (req, res) => {
     const { name, email, phone, message } = req.body;
-    console.log("EMAIL_RESEND_API:", process.env.EMAIL_RESEND_API);
-    console.log("RECEIVER_MAIL:", process.env.RECEIVER_MAIL);
+    // console.log("EMAIL_RESEND_API:", process.env.EMAIL_RESEND_API);
+    // console.log("RECEIVER_MAIL:", process.env.RECEIVER_MAIL);
 
 
-    console.log(req.body);
+    // console.log(req.body);
 
     // Build the same HTML template
     const htmlContent = `
