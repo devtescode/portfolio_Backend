@@ -1,38 +1,14 @@
 const { Userschema } = require("../Models/user.models")
-// const nodemailer = require("nodemailer")
 const jwt = require("jsonwebtoken")
 const axios = require("axios")
 const env = require("dotenv")
-// const UAParser = require('ua-parser-js');
-// const secret = process.env.SECRET
-// const cloudinary = require("cloudinary")
 const adminsecret = process.env.ADMIN_SECRET
 const bcrypt = require("bcryptjs")
-const nodemailer = require("nodemailer")
-// const { v4: uuidv4 } = require('uuid');
 const mongoose = require("mongoose")
-// const cron = require('node-cron');
+const { Resend } = require("resend");
+const resend = new Resend(process.env.EMAIL_RESEND_API);
+env.config();
 
-env.config()
-
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // MUST be false for 587
-    auth: {
-        user: process.env.RECEIVER_MAIL,
-        pass: process.env.APP_PASSWORD, // ✔ uppercase
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
-});
-
-// cloudinary.config({
-//     cloud_name: process.env.CLOUD_NAME,
-//     api_key: process.env.API_KEY,
-//     api_secret: process.env.API_SECRETCLOUD
-// });
 
 
 
@@ -98,54 +74,54 @@ module.exports.check = async (req, res) => {
     }
 }
 
+
+
 module.exports.contact = async (req, res) => {
-    const { name, email, phone, message } = req.body;
-    console.log(req.body);
+  const { name, email, phone, message } = req.body;
 
-    console.log(process.env.APP_PASSWORD);
+  console.log(req.body);
 
-    const mailOptions = {
-        from: email,
-        to: process.env.RECEIVER_MAIL,
-        subject: 'New Contact Form Submission',
-        html: `
-            <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-                <h2 style="color: #2C3E50; text-align: center; margin-bottom: 20px;">New Contact Form Submission</h2>
-                <p style="color: #555; text-align: center;">You have received a new message from the contact form on your website portfolio.</p>
-                
-                <div style="margin-top: 20px; padding: 15px; border-top: 1px solid #ddd;">
-                    <h4 style="color: #2C3E50; margin-bottom: 10px;">Sender Details:</h4>
-                    <p><strong>Name:</strong> ${name}</p>
-                    <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #2980B9;">${email}</a></p>
-                    <p><strong>Phone:</strong> ${phone}</p>
-                </div>
-    
-                <div style="margin-top: 20px; padding: 15px; border-top: 1px solid #ddd;">
-                    <h4 style="color: #2C3E50; margin-bottom: 10px;">Message:</h4>
-                    <p style="line-height: 1.6; color: #555;">${message}</p>
-                </div>
-    
-                <footer style="margin-top: 20px; padding: 10px; text-align: center; border-top: 1px solid #ddd; font-size: 12px; color: #999;">
-                    <p>Thank you for using our service!</p>
-                </footer>
-            </div>
-        `
-    };
+  // Build the same HTML template
+  const htmlContent = `
+    <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+      <h2 style="color: #2C3E50; text-align: center; margin-bottom: 20px;">New Contact Form Submission</h2>
+      <p style="color: #555; text-align: center;">You have received a new message from the contact form on your website portfolio.</p>
+      
+      <div style="margin-top: 20px; padding: 15px; border-top: 1px solid #ddd;">
+          <h4 style="color: #2C3E50; margin-bottom: 10px;">Sender Details:</h4>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #2980B9;">${email}</a></p>
+          <p><strong>Phone:</strong> ${phone}</p>
+      </div>
 
+      <div style="margin-top: 20px; padding: 15px; border-top: 1px solid #ddd;">
+          <h4 style="color: #2C3E50; margin-bottom: 10px;">Message:</h4>
+          <p style="line-height: 1.6; color: #555;">${message}</p>
+      </div>
 
-    try {
-        await transporter.sendMail(mailOptions);
+      <footer style="margin-top: 20px; padding: 10px; text-align: center; border-top: 1px solid #ddd; font-size: 12px; color: #999;">
+          <p>Thank you for using our service!</p>
+      </footer>
+    </div>
+  `;
 
-        console.log("Message sent successfully");
-        res.status(200).json({ message: "Message sent successfully!" });
+  try {
+    await resend.emails.send({
+      from: "Portfolio <onboarding@resend.dev>",
+      to: [process.env.RECEIVER_MAIL],
+      subject: "New Contact Form Submission",
+      html: htmlContent,
+      reply_to: email, // So you can reply directly to the sender
+    });
 
-    } catch (error) {
-        console.error("Email send error:", error);
+    console.log("Message sent successfully");
+    res.status(200).json({ message: "Message sent successfully!" });
 
-        res.status(500).json({
-            message: "Failed to send message",
-            error: error.message, // helpful during debugging
-        });
-    }
-
-}
+  } catch (error) {
+    console.error("Email send error:", error);
+    res.status(500).json({
+      message: "Failed to send message",
+      error: error.message,
+    });
+  }
+};
