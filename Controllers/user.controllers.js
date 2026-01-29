@@ -134,13 +134,18 @@ module.exports.contact = async (req, res) => {
 
 
     try {
-        // Send the email
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({ message: 'Message sent successfully!' });
-        console.log("Message sent successfully");
+  await transporter.sendMail(mailOptions);
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Failed to send message' });
-    }
+  console.log("Message sent successfully");
+  res.status(200).json({ message: "Message sent successfully!" });
+
+} catch (error) {
+  console.error("Email send error:", error);
+
+  res.status(500).json({
+    message: "Failed to send message",
+    error: error.message, // helpful during debugging
+  });
+}
+
 }
