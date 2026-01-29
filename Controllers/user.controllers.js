@@ -114,7 +114,7 @@ module.exports.contact = async (req, res) => {
             to: [process.env.RECEIVER_MAIL],
             subject: "New Contact Form Submission",
             html: htmlContent,
-            reply_to: email, // So you can reply directly to the sender
+            reply_to: email, 
         });
 
         console.log("Message sent successfully");
