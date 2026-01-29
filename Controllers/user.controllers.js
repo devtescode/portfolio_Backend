@@ -95,7 +95,10 @@ module.exports.check = async (req, res) => {
 
 module.exports.contact = async (req, res) => {
     const { name, email, phone, message } = req.body;
+    console.log(req.body);
 
+    console.log(process.env.App_Password);
+    
     const mailOptions = {
         from: email,
         to: process.env.RECEIVER_MAIL,
